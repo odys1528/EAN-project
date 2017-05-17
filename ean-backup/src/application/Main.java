@@ -1,5 +1,6 @@
 package application;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,8 +22,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -127,7 +128,7 @@ public class Main extends Application implements Initializable {
 	@FXML
 	private Button zatwierdz6;
 
-	private LineChart lineChart;
+	private ScatterChart scatterChart;
 	private NumberAxis chartX;
 	private NumberAxis chartY;
 	
@@ -138,13 +139,13 @@ public class Main extends Application implements Initializable {
 	private Label funkcja_interpolowana;
 	
 	
-	private void wykres() {
+	private void wykres() throws IOException {
 		//PIERWSZY WYKRES----------------------------------------------------------------------
 		chartX = new NumberAxis();
         chartY = new NumberAxis();
         String[] wykres = {"x^", "^x", "*sin(x)"};
-        final LineChart<Number,Number> lineChart = new LineChart<Number,Number>(chartX,chartY);   
-        lineChart.setCreateSymbols(false);
+        final ScatterChart<Number,Number> scatterChart = new ScatterChart<Number,Number>(chartX,chartY);   
+        scatterChart.setAnimated(false);
         XYChart.Series series = new XYChart.Series();
         
         if(index == 0) {
@@ -182,7 +183,7 @@ public class Main extends Application implements Initializable {
         //DRUGI WYKRES-------------------------------------------------------------------------
         
         XYChart.Series series2 = new XYChart.Series();
-        series2.setName("funkcja interpolowana");
+        series2.setName("wielomian interpolacyjny");
         
         double[] x = new double[punkty_uzytkownika.size()];
 		for(int i=0; i<punkty_uzytkownika.size(); i++) {
@@ -219,7 +220,7 @@ public class Main extends Application implements Initializable {
 		funkcja_interpolowana = new Label();
 		gridPane.add(funkcja_interpolowana, 0, 0);
 		
-		funkcja_interpolowana.setText("f'(x) = ");
+		funkcja_interpolowana.setText("w(x) = ");
 		for(int i = x.length-1; i>=0; i--){
 			System.out.println("a"+i+" = " +g.get(i, 0) );
 			funkcja_interpolowana.setText(funkcja_interpolowana.getText() + g.get(i,0) + "x^" + i + " + ");
@@ -233,18 +234,30 @@ public class Main extends Application implements Initializable {
 			}
 			series2.getData().add(new XYChart.Data(i, fun));
 		}
+		
+		XYChart.Series series3 = new XYChart.Series();
+        series3.setName("punkty u¿ytkownika");
+        //scatterChart.setCreateSymbols(true);
+        for(double i: punkty_uzytkownika) {
+        	double fun = 0;
+			for(int w=0; w<g.getRowDimension(); w++) {
+				fun += Math.pow(i, w)*g.get(w, 0);
+			}
+        	series3.getData().add(new XYChart.Data(i, fun));
+        }
         
         Stage stage = new Stage();
         Stage stage2 = new Stage();
-        Scene scene = new Scene(lineChart,1024,768);
-        Scene scene2  = new Scene(gridPane,1024,768);
-        
-        lineChart.getData().addAll(series, series2);
+        Scene scene = new Scene(scatterChart,1024,768);
+        scene.getStylesheets().add("/view/style.css");
+        scatterChart.getData().addAll(series, series2, series3);
         
         stage.setScene(scene);
         stage.setTitle("Wykres");
         stage.show();
         
+        
+        Scene scene2 = new Scene(gridPane, 400, 400);
         stage2.setScene(scene2);
         stage2.setTitle("Dane");
         stage2.show();
@@ -262,7 +275,11 @@ public class Main extends Application implements Initializable {
 			@Override
 			public void handle(ActionEvent event) {
 				if(!funkcja.getText().equals("f(x) =") && !punkty.getText().equals("x \u2208 { }") && zatwierdz5.isDisable()) {
-					wykres();
+					try {
+						wykres();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 				
 			}
