@@ -43,6 +43,7 @@ public class Main extends Application implements Initializable {
 	private double odl = 0;
 	private double mn, mx;
 	private static double p;
+	private static int aryt = -1;
 
 	@FXML
 	private Button interpoluj;
@@ -127,6 +128,9 @@ public class Main extends Application implements Initializable {
 	
 	@FXML
 	private Button zatwierdz6;
+	
+	@FXML
+	private ChoiceBox<String> arytmetyka;
 
 	private ScatterChart scatterChart;
 	private NumberAxis chartX;
@@ -137,6 +141,8 @@ public class Main extends Application implements Initializable {
 	
 	private GridPane gridPane;
 	private Label funkcja_interpolowana;
+	private TextField odcieta2;
+	private Button oblicz;
 	
 	
 	private void wykres() throws IOException {
@@ -271,10 +277,15 @@ public class Main extends Application implements Initializable {
 		funkcja_uzytkownika = new ArrayList<>();
 		punkty_uzytkownika = new ArrayList<>();
 		
+		wylaczFunkcje();
+		wylaczPunkty();
+		ilosc_punktow.setDisable(false);
+		zatwierdz3.setDisable(false);
+		
 		interpoluj.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				if(!funkcja.getText().equals("f(x) =") && !punkty.getText().equals("x \u2208 { }") && zatwierdz5.isDisable()) {
+				if(!funkcja.getText().equals("f(x) =") && !punkty.getText().equals("x \u2208 { }") && zatwierdz5.isDisable() && aryt!=-1) {
 					try {
 						wykres();
 					} catch (IOException e) {
@@ -532,6 +543,15 @@ public class Main extends Application implements Initializable {
 		         }
 
 		     } 
+		});
+		
+		arytmetyka.setItems(FXCollections.observableArrayList("arytmetyka zmiennoprzecinkowa", "arytmetyka przedzia³owa"));
+		
+		arytmetyka.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+			public void changed(ObservableValue ov, Number value, Number new_value) {
+				aryt = (int) new_value;
+				System.out.println(aryt);
+			}
 		});
 	} 
 	
