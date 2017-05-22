@@ -141,8 +141,11 @@ public class Main extends Application implements Initializable {
 	
 	private GridPane gridPane;
 	private Label funkcja_interpolowana;
+	private Label funkcja_bazowa;
 	private TextField odcieta2;
 	private Button oblicz;
+	private Label wx;
+	private Label fx;
 	
 	
 	private void wykres() throws IOException {
@@ -223,8 +226,12 @@ public class Main extends Application implements Initializable {
 	    gridPane.setHgap(5);       
 	    gridPane.setAlignment(Pos.CENTER); 
 		
+	    funkcja_bazowa = new Label();
+	    funkcja_bazowa.setText("f(x) = " + series.getName());
+	    gridPane.add(funkcja_bazowa, 0, 0);
+	    
 		funkcja_interpolowana = new Label();
-		gridPane.add(funkcja_interpolowana, 0, 0);
+		gridPane.add(funkcja_interpolowana, 0, 1);
 		
 		funkcja_interpolowana.setText("w(x) = ");
 		for(int i = x.length-1; i>=0; i--){
@@ -232,6 +239,23 @@ public class Main extends Application implements Initializable {
 			funkcja_interpolowana.setText(funkcja_interpolowana.getText() + g.get(i,0) + "x^" + i + " + ");
 		}
 		funkcja_interpolowana.setText(funkcja_interpolowana.getText().substring(0, funkcja_interpolowana.getText().length()-2));
+		
+		odcieta2 = new TextField();
+		odcieta2.setPromptText("odcieta");
+		gridPane.add(odcieta2, 0, 2);
+		
+		oblicz = new Button();
+		oblicz.setText("oblicz");
+		gridPane.add(oblicz, 1, 2);
+		
+		fx = new Label();
+		wx = new Label();
+		fx.setText("f(x) = ");
+		wx.setText("w(x) = ");
+		gridPane.add(fx, 0, 3);
+		gridPane.add(wx, 0, 4);
+		
+		
 		
 		for(double i=mn; i<=mx; i+=0.01) {
 			double fun = 0;
