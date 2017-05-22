@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
-import Jama.Matrix;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -148,6 +147,7 @@ public class Main extends Application implements Initializable {
 	private Label fx;
 	private Label delta;
 	private Label pom1, pom2;
+	private double[] y1;
 	
 	
 	private void wykres() throws IOException {
@@ -201,25 +201,26 @@ public class Main extends Application implements Initializable {
 			x[i]=punkty_uzytkownika.get(i);
 		}
 		
-		double[][] y = new double[punkty_uzytkownika.size()][1];
+		double[] y = new double[punkty_uzytkownika.size()];
 		for(int i=0; i<punkty_uzytkownika.size(); i++){
 			if(index == 0) {
-				y[i][0] = Math.pow(punkty_uzytkownika.get(i), p);
+				y[i] = Math.pow(punkty_uzytkownika.get(i), p);
 			}
 			else if(index == 1) {
-				y[i][0] = Math.pow(p, punkty_uzytkownika.get(i));
+				y[i] = Math.pow(p, punkty_uzytkownika.get(i));
 			}
 			else if(index == 2) {
-				y[i][0] = Math.sin(punkty_uzytkownika.get(i))*p;
+				y[i] = Math.sin(punkty_uzytkownika.get(i))*p;
 			}
 			else {
 				for(int w=0; w<funkcja_uzytkownika.size(); w++) {
-        			y[i][0] += Math.pow(i, w)*funkcja_uzytkownika.get(w);
+        			y[i] += Math.pow(i, w)*funkcja_uzytkownika.get(w);
         		}
 			}
 		}
         
-		Matrix g = polynomialInterpolation(x,y);
+		y=interpolacja(x,y);
+		y1=y;
 		
 		gridPane = new GridPane();
 		gridPane.setMinSize(400, 200); 
@@ -237,8 +238,8 @@ public class Main extends Application implements Initializable {
 		
 		funkcja_interpolowana.setText("w(x) = ");
 		for(int i = x.length-1; i>=0; i--){
-			System.out.println("a"+i+" = " +g.get(i, 0) );
-			funkcja_interpolowana.setText(funkcja_interpolowana.getText() + g.get(i,0) + "x^" + i + " + ");
+			System.out.println("a"+i+" = " +y[i] );
+			funkcja_interpolowana.setText(funkcja_interpolowana.getText() + y[i] + "x^" + i + " + ");
 		}
 		funkcja_interpolowana.setText(funkcja_interpolowana.getText().substring(0, funkcja_interpolowana.getText().length()-2));
 		
@@ -295,8 +296,8 @@ public class Main extends Application implements Initializable {
 			        fx.setText("f(x) = " + f);
 			        
 					w = 0;
-					for(int t=0; t<g.getRowDimension(); t++) {
-						w += Math.pow(x, t)*g.get(t, 0);
+					for(int t=0; t<y1.length; t++) {
+						w += Math.pow(x, t)*y1[t];
 					}
 					wx.setText("w(x) = " + w);
 					
@@ -309,8 +310,8 @@ public class Main extends Application implements Initializable {
 		
 		for(double i=mn; i<=mx; i+=0.01) {
 			double fun = 0;
-			for(int w=0; w<g.getRowDimension(); w++) {
-				fun += Math.pow(i, w)*g.get(w, 0);
+			for(int w=0; w<y.length; w++) {
+				fun += Math.pow(i, w)*y[w];
 			}
 			series2.getData().add(new XYChart.Data(i, fun));
 		}
@@ -320,8 +321,8 @@ public class Main extends Application implements Initializable {
         //scatterChart.setCreateSymbols(true);
         for(double i: punkty_uzytkownika) {
         	double fun = 0;
-			for(int w=0; w<g.getRowDimension(); w++) {
-				fun += Math.pow(i, w)*g.get(w, 0);
+			for(int w=0; w<y.length; w++) {
+				fun += Math.pow(i, w)*y[w];
 			}
         	series3.getData().add(new XYChart.Data(i, fun));
         }
@@ -667,6 +668,38 @@ public class Main extends Application implements Initializable {
 		return match || match2;
 	}
 	
+	private static double[] interpolacja(double[] x, double[] y) {
+		int st=0, i=-1, n=x.length;
+		
+		do {
+			i++;
+			for(int k=i+1;k<n;k++) {
+				if(x[i]==x[k])st=42;
+			}
+		} while(i==n-1 || st==42);
+		
+		if(st==0) {
+			for(int k=1; k<n; k++) {
+				for(i=0; i<n-k; i++) {
+					y[i]=(y[i+1]-y[i])/(x[i+k]-x[i]);
+				}
+			}
+			
+			for(i=1;i<n;i++){
+				for(int j=i;j>=1;j--){
+					y[j]-=y[j-1]*x[i];
+				}
+			}
+		}
+		for (int left = 0, right = y.length - 1; left < right; left++, right--) {
+	        // swap the values at the left and right indices
+	        double temp = y[left];
+	        y[left] = y[right];
+	        y[right] = temp;
+	    }
+		return y;
+	}
+	
     @Override
     public void start(Stage stage) throws Exception {      	
 		Parent parent = (Parent) FXMLLoader.load(getClass().getResource("/view/MainPane.fxml"));
@@ -680,33 +713,5 @@ public class Main extends Application implements Initializable {
         launch(args);
     }
   
-    public static double iloraz(List<Double> l) {
-    	//{"x^p", "p^x", "p*sin(x)"}
-    	if(l.size() == 2) {
-    		if(index == 0) {
-    			return (Math.pow(l.get(1), p) - Math.pow(l.get(0), p)) / (l.get(1) - l.get(0));
-    		}
-    		if(index == 1) {
-    			return (Math.pow(p, l.get(1)) - Math.pow(p, l.get(0))) / (l.get(1) - l.get(0));
-    		}
-    		if(index == 2) {
-    			return (p*Math.sin(l.get(1)) - p*Math.sin(l.get(0))) / (l.get(1) - l.get(0));
-    		}
-    	}
-    	
-    	return (iloraz(l.subList(1, l.size()))- iloraz(l.subList(0, l.size()-1))) / (l.get(l.size()-1) - l.get(0));
-    }
-    
-    public static Matrix polynomialInterpolation(double[] x, double[][] y){
-		 
-		int n = x.length;
-		Matrix A = new Matrix(n,n);
-		for(int i =0; i< n; i++)
-			for(int j = 0; j< n; j++)
-				A.set(i, j, Math.pow(x[i], j));
-		 
-		Matrix a = A.solve(new Matrix(y));
-		return a;
-	}
 
 }
