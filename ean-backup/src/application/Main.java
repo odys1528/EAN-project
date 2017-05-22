@@ -146,6 +146,8 @@ public class Main extends Application implements Initializable {
 	private Button oblicz;
 	private Label wx;
 	private Label fx;
+	private Label delta;
+	private Label pom1, pom2;
 	
 	
 	private void wykres() throws IOException {
@@ -240,20 +242,68 @@ public class Main extends Application implements Initializable {
 		}
 		funkcja_interpolowana.setText(funkcja_interpolowana.getText().substring(0, funkcja_interpolowana.getText().length()-2));
 		
+		pom1 = new Label();
+		gridPane.add(pom1, 0, 2);
+		
 		odcieta2 = new TextField();
 		odcieta2.setPromptText("odcieta");
-		gridPane.add(odcieta2, 0, 2);
+		gridPane.add(odcieta2, 0, 3);
 		
 		oblicz = new Button();
 		oblicz.setText("oblicz");
-		gridPane.add(oblicz, 1, 2);
+		gridPane.add(oblicz, 1, 3);
+		
+		pom2 = new Label();
+		gridPane.add(pom2, 0, 4);
 		
 		fx = new Label();
 		wx = new Label();
 		fx.setText("f(x) = ");
 		wx.setText("w(x) = ");
-		gridPane.add(fx, 0, 3);
-		gridPane.add(wx, 0, 4);
+		gridPane.add(fx, 0, 5);
+		gridPane.add(wx, 0, 6);
+		
+		delta = new Label();
+		delta.setText("\u2206 = ");
+		gridPane.add(delta, 0, 7);
+		
+		oblicz.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				if(!odcieta2.getText().isEmpty() && isNumeric2(odcieta2.getText())) {
+					double x = Double.parseDouble(odcieta2.getText());
+					double f, w;
+					
+					if(index == 0) {
+						f=Math.pow(x, p);
+			        }
+			        
+			        else if(index == 1) {
+			        	f=Math.pow(p, x);
+			        }
+			        
+			        else if(index == 2) {
+			        	f=p*Math.sin(x);
+			        }
+			        
+			        else {
+			        	f=0;
+			        	for(int t=0; t<funkcja_uzytkownika.size(); t++) {
+			        		f += Math.pow(x, t)*funkcja_uzytkownika.get(t);
+			        	}
+			        }
+			        fx.setText("f(x) = " + f);
+			        
+					w = 0;
+					for(int t=0; t<g.getRowDimension(); t++) {
+						w += Math.pow(x, t)*g.get(t, 0);
+					}
+					wx.setText("w(x) = " + w);
+					
+					delta.setText("\u2206 = " + (f-w));
+				}
+			}
+		});
 		
 		
 		
