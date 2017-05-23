@@ -33,6 +33,8 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import ia_math.IAMath;
+import ia_math.RealInterval;
 
 public class Main extends Application implements Initializable {
 	
@@ -148,6 +150,7 @@ public class Main extends Application implements Initializable {
 	private Label delta;
 	private Label pom1, pom2;
 	private double[] y1;
+	private RealInterval[] y2;
 	
 	
 	private void wykres() throws IOException {
@@ -195,153 +198,307 @@ public class Main extends Application implements Initializable {
         
         XYChart.Series series2 = new XYChart.Series();
         series2.setName("wielomian interpolacyjny");
-        
-        double[] x = new double[punkty_uzytkownika.size()];
-		for(int i=0; i<punkty_uzytkownika.size(); i++) {
-			x[i]=punkty_uzytkownika.get(i);
-		}
-		
-		double[] y = new double[punkty_uzytkownika.size()];
-		for(int i=0; i<punkty_uzytkownika.size(); i++){
-			if(index == 0) {
-				y[i] = Math.pow(punkty_uzytkownika.get(i), p);
-			}
-			else if(index == 1) {
-				y[i] = Math.pow(p, punkty_uzytkownika.get(i));
-			}
-			else if(index == 2) {
-				y[i] = Math.sin(punkty_uzytkownika.get(i))*p;
-			}
-			else {
-				for(int w=0; w<funkcja_uzytkownika.size(); w++) {
-        			y[i] += Math.pow(i, w)*funkcja_uzytkownika.get(w);
+      
+        if(aryt==0) {
+        	double[] x = new double[punkty_uzytkownika.size()];
+    		for(int i=0; i<punkty_uzytkownika.size(); i++) {
+    			x[i]=punkty_uzytkownika.get(i);
+    		}
+    		
+    		double[] y = new double[punkty_uzytkownika.size()];
+    		for(int i=0; i<punkty_uzytkownika.size(); i++){
+    			if(index == 0) {
+    				y[i] = Math.pow(punkty_uzytkownika.get(i), p);
+    			}
+    			else if(index == 1) {
+    				y[i] = Math.pow(p, punkty_uzytkownika.get(i));
+    			}
+    			else if(index == 2) {
+    				y[i] = Math.sin(punkty_uzytkownika.get(i))*p;
+    			}
+    			else {
+    				for(int w=0; w<funkcja_uzytkownika.size(); w++) {
+            			y[i] += Math.pow(i, w)*funkcja_uzytkownika.get(w);
+            		}
+    			}
+    		}
+        	
+        	y=interpolacja(x,y);
+    		y1=y;
+    		
+    		gridPane = new GridPane();
+    		gridPane.setMinSize(400, 200); 
+    	    gridPane.setPadding(new Insets(10, 10, 10, 10)); 
+    	    gridPane.setVgap(5); 
+    	    gridPane.setHgap(5);       
+    	    gridPane.setAlignment(Pos.CENTER); 
+    		
+    	    funkcja_bazowa = new Label();
+    	    funkcja_bazowa.setText("f(x) = " + series.getName());
+    	    gridPane.add(funkcja_bazowa, 0, 0);
+    	    
+    		funkcja_interpolowana = new Label();
+    		gridPane.add(funkcja_interpolowana, 0, 1);
+    		
+    		funkcja_interpolowana.setText("w(x) = ");
+    		for(int i = x.length-1; i>=0; i--){
+    			System.out.println("a"+i+" = " +y[i] );
+    			funkcja_interpolowana.setText(funkcja_interpolowana.getText() + y[i] + "x^" + i + " + ");
+    		}
+    		funkcja_interpolowana.setText(funkcja_interpolowana.getText().substring(0, funkcja_interpolowana.getText().length()-2));
+    		
+    		pom1 = new Label();
+    		gridPane.add(pom1, 0, 2);
+    		
+    		odcieta2 = new TextField();
+    		odcieta2.setPromptText("odcieta");
+    		gridPane.add(odcieta2, 0, 3);
+    		
+    		oblicz = new Button();
+    		oblicz.setText("oblicz");
+    		gridPane.add(oblicz, 1, 3);
+    		
+    		pom2 = new Label();
+    		gridPane.add(pom2, 0, 4);
+    		
+    		fx = new Label();
+    		wx = new Label();
+    		fx.setText("f(x) = ");
+    		wx.setText("w(x) = ");
+    		gridPane.add(fx, 0, 5);
+    		gridPane.add(wx, 0, 6);
+    		
+    		delta = new Label();
+    		delta.setText("\u2206 = ");
+    		gridPane.add(delta, 0, 7);
+    		
+    		oblicz.setOnAction(new EventHandler<ActionEvent>() {
+    			@Override
+    			public void handle(ActionEvent event) {
+    				if(!odcieta2.getText().isEmpty() && isNumeric2(odcieta2.getText())) {
+    					double x = Double.parseDouble(odcieta2.getText());
+    					double f, w;
+    					
+    					if(index == 0) {
+    						f=Math.pow(x, p);
+    			        }
+    			        
+    			        else if(index == 1) {
+    			        	f=Math.pow(p, x);
+    			        }
+    			        
+    			        else if(index == 2) {
+    			        	f=p*Math.sin(x);
+    			        }
+    			        
+    			        else {
+    			        	f=0;
+    			        	for(int t=0; t<funkcja_uzytkownika.size(); t++) {
+    			        		f += Math.pow(x, t)*funkcja_uzytkownika.get(t);
+    			        	}
+    			        }
+    			        fx.setText("f(x) = " + f);
+    			        
+    					w = 0;
+    					for(int t=0; t<y1.length; t++) {
+    						w += Math.pow(x, t)*y1[t];
+    					}
+    					wx.setText("w(x) = " + w);
+    					
+    					delta.setText("\u2206 = " + (f-w));
+    				}
+    			}
+    		});
+    		
+    		
+    		
+    		for(double i=mn; i<=mx; i+=0.01) {
+    			double fun = 0;
+    			for(int w=0; w<y.length; w++) {
+    				fun += Math.pow(i, w)*y[w];
+    			}
+    			series2.getData().add(new XYChart.Data(i, fun));
+    		}
+    		
+    		XYChart.Series series3 = new XYChart.Series();
+            series3.setName("punkty u¿ytkownika");
+            //scatterChart.setCreateSymbols(true);
+            for(double i: punkty_uzytkownika) {
+            	double fun = 0;
+    			for(int w=0; w<y.length; w++) {
+    				fun += Math.pow(i, w)*y[w];
+    			}
+            	series3.getData().add(new XYChart.Data(i, fun));
+            }
+            
+            Stage stage = new Stage();
+            Stage stage2 = new Stage();
+            Scene scene = new Scene(scatterChart,1024,768);
+            scene.getStylesheets().add("/view/style.css");
+            scatterChart.getData().addAll(series, series2, series3);
+            
+            stage.setScene(scene);
+            stage.setTitle("Wykres");
+            stage.show();
+            
+            
+            Scene scene2 = new Scene(gridPane, 400, 400);
+            stage2.setScene(scene2);
+            stage2.setTitle("Dane");
+            stage2.show();
+        } else if(aryt==1) {
+        	RealInterval[] x = new RealInterval[punkty_uzytkownika.size()];
+        	for(int i=0; i<punkty_uzytkownika.size(); i++) {
+        		x[i] = new RealInterval(punkty_uzytkownika.get(i));
+        	}
+        	
+        	RealInterval[] y = new RealInterval[punkty_uzytkownika.size()];
+        	for(int i=0; i<punkty_uzytkownika.size(); i++) {
+        		if(index==0) {
+        			y[i] = IAMath.evenPower(x[i], p);
         		}
-			}
-		}
-        
-		y=interpolacja(x,y);
-		y1=y;
-		
-		gridPane = new GridPane();
-		gridPane.setMinSize(400, 200); 
-	    gridPane.setPadding(new Insets(10, 10, 10, 10)); 
-	    gridPane.setVgap(5); 
-	    gridPane.setHgap(5);       
-	    gridPane.setAlignment(Pos.CENTER); 
-		
-	    funkcja_bazowa = new Label();
-	    funkcja_bazowa.setText("f(x) = " + series.getName());
-	    gridPane.add(funkcja_bazowa, 0, 0);
-	    
-		funkcja_interpolowana = new Label();
-		gridPane.add(funkcja_interpolowana, 0, 1);
-		
-		funkcja_interpolowana.setText("w(x) = ");
-		for(int i = x.length-1; i>=0; i--){
-			System.out.println("a"+i+" = " +y[i] );
-			funkcja_interpolowana.setText(funkcja_interpolowana.getText() + y[i] + "x^" + i + " + ");
-		}
-		funkcja_interpolowana.setText(funkcja_interpolowana.getText().substring(0, funkcja_interpolowana.getText().length()-2));
-		
-		pom1 = new Label();
-		gridPane.add(pom1, 0, 2);
-		
-		odcieta2 = new TextField();
-		odcieta2.setPromptText("odcieta");
-		gridPane.add(odcieta2, 0, 3);
-		
-		oblicz = new Button();
-		oblicz.setText("oblicz");
-		gridPane.add(oblicz, 1, 3);
-		
-		pom2 = new Label();
-		gridPane.add(pom2, 0, 4);
-		
-		fx = new Label();
-		wx = new Label();
-		fx.setText("f(x) = ");
-		wx.setText("w(x) = ");
-		gridPane.add(fx, 0, 5);
-		gridPane.add(wx, 0, 6);
-		
-		delta = new Label();
-		delta.setText("\u2206 = ");
-		gridPane.add(delta, 0, 7);
-		
-		oblicz.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				if(!odcieta2.getText().isEmpty() && isNumeric2(odcieta2.getText())) {
-					double x = Double.parseDouble(odcieta2.getText());
-					double f, w;
-					
-					if(index == 0) {
-						f=Math.pow(x, p);
-			        }
-			        
-			        else if(index == 1) {
-			        	f=Math.pow(p, x);
-			        }
-			        
-			        else if(index == 2) {
-			        	f=p*Math.sin(x);
-			        }
-			        
-			        else {
-			        	f=0;
-			        	for(int t=0; t<funkcja_uzytkownika.size(); t++) {
-			        		f += Math.pow(x, t)*funkcja_uzytkownika.get(t);
-			        	}
-			        }
-			        fx.setText("f(x) = " + f);
-			        
-					w = 0;
-					for(int t=0; t<y1.length; t++) {
-						w += Math.pow(x, t)*y1[t];
-					}
-					wx.setText("w(x) = " + w);
-					
-					delta.setText("\u2206 = " + (f-w));
-				}
-			}
-		});
-		
-		
-		
-		for(double i=mn; i<=mx; i+=0.01) {
-			double fun = 0;
-			for(int w=0; w<y.length; w++) {
-				fun += Math.pow(i, w)*y[w];
-			}
-			series2.getData().add(new XYChart.Data(i, fun));
-		}
-		
-		XYChart.Series series3 = new XYChart.Series();
-        series3.setName("punkty u¿ytkownika");
-        //scatterChart.setCreateSymbols(true);
-        for(double i: punkty_uzytkownika) {
-        	double fun = 0;
-			for(int w=0; w<y.length; w++) {
-				fun += Math.pow(i, w)*y[w];
-			}
-        	series3.getData().add(new XYChart.Data(i, fun));
+        		else if(index==1) {
+        			y[i] = IAMath.power(new RealInterval(p), x[i]);
+        		}
+        		else if(index==2) {
+        			y[i] = IAMath.sin(x[i]);
+        		}
+        		else {
+        			for(int w=0; w<funkcja_uzytkownika.size(); w++) {
+        				y[i]=IAMath.add(y[i], IAMath.mul(IAMath.evenPower(new RealInterval(i), w), new RealInterval(funkcja_uzytkownika.get(w))));
+        			}
+        		}
+        	}
+        	
+        	y=interpolacja2(x,y);
+        	y2=y;
+        	
+        	gridPane = new GridPane();
+    		gridPane.setMinSize(400, 200); 
+    	    gridPane.setPadding(new Insets(10, 10, 10, 10)); 
+    	    gridPane.setVgap(5); 
+    	    gridPane.setHgap(5);       
+    	    gridPane.setAlignment(Pos.CENTER); 
+    		
+    	    funkcja_bazowa = new Label();
+    	    funkcja_bazowa.setText("f(x) = " + series.getName());
+    	    gridPane.add(funkcja_bazowa, 0, 0);
+    	    
+    		funkcja_interpolowana = new Label();
+    		gridPane.add(funkcja_interpolowana, 0, 1);
+    		
+    		funkcja_interpolowana.setText("w(x) = ");
+    		for(int i = x.length-1; i>=0; i--){
+    			funkcja_interpolowana.setText(funkcja_interpolowana.getText() + "["+y[i].lo+", "+y[i].hi + "]x^" + i + " + ");
+    		}
+    		funkcja_interpolowana.setText(funkcja_interpolowana.getText().substring(0, funkcja_interpolowana.getText().length()-2));
+    		
+    		pom1 = new Label();
+    		gridPane.add(pom1, 0, 2);
+    		
+    		odcieta2 = new TextField();
+    		odcieta2.setPromptText("odcieta");
+    		gridPane.add(odcieta2, 0, 3);
+    		
+    		oblicz = new Button();
+    		oblicz.setText("oblicz");
+    		gridPane.add(oblicz, 1, 3);
+    		
+    		pom2 = new Label();
+    		gridPane.add(pom2, 0, 4);
+    		
+    		fx = new Label();
+    		wx = new Label();
+    		fx.setText("f([x]) = ");
+    		wx.setText("w([x]) = ");
+    		gridPane.add(fx, 0, 5);
+    		gridPane.add(wx, 0, 6);
+    		
+    		delta = new Label();
+    		delta.setText("\u2206 = ");
+    		gridPane.add(delta, 0, 7);
+    		
+    		oblicz.setOnAction(new EventHandler<ActionEvent>() {
+    			@Override
+    			public void handle(ActionEvent event) {
+    				if(!odcieta2.getText().isEmpty() && isNumeric2(odcieta2.getText())) {
+    					double x = Double.parseDouble(odcieta2.getText());
+    					double f=0, w=0;
+    					
+    					if(index == 0) {
+    						//f=Math.pow(x, p);
+    			        }
+    			        
+    			        else if(index == 1) {
+    			        	//f=Math.pow(p, x);
+    			        }
+    			        
+    			        else if(index == 2) {
+    			        	//f=p*Math.sin(x);
+    			        }
+    			        
+    			        else {
+    			        	f=0;
+    			        	for(int t=0; t<funkcja_uzytkownika.size(); t++) {
+    			        		//f += Math.pow(x, t)*funkcja_uzytkownika.get(t);
+    			        	}
+    			        }
+    			        fx.setText("f([x]) = " + f);
+    			        
+    					w = 0;
+    					for(int t=0; t<y2.length; t++) {
+    						//w += Math.pow(x, t)*y1[t];
+    					}
+    					wx.setText("w([x]) = " + w);
+    					
+    					delta.setText("\u2206 = " + (f-w));
+    				}
+    			}
+    		});
+    		
+    		for(double i=mn; i<=mx; i+=0.01) {
+    			double fun = 0;
+    			double fun2 = 0;
+    			for(int w=0; w<y.length; w++) {
+    				fun += Math.pow(i, w)*y[w].lo;
+    				fun2 += Math.pow(i, w)*y[w].hi;
+    			}
+    			series2.getData().add(new XYChart.Data(i, fun));
+    			series2.getData().add(new XYChart.Data(i, fun2));
+    		}
+    		
+    		XYChart.Series series3 = new XYChart.Series();
+            series3.setName("punkty u¿ytkownika");
+            //scatterChart.setCreateSymbols(true);
+            for(double i: punkty_uzytkownika) {
+            	double fun = 0;
+            	double fun2 = 0;
+    			for(int w=0; w<y.length; w++) {
+    				fun += Math.pow(i, w)*y[w].lo;
+    				fun2 += Math.pow(i, w)*y[w].hi;
+    			}
+    			series3.getData().add(new XYChart.Data(i, fun));
+    			series3.getData().add(new XYChart.Data(i, fun2));
+            }
+            
+            Stage stage = new Stage();
+            Stage stage2 = new Stage();
+            Scene scene = new Scene(scatterChart,1024,768);
+            scene.getStylesheets().add("/view/style.css");
+            scatterChart.getData().addAll(series, series2, series3);
+            
+            stage.setScene(scene);
+            stage.setTitle("Wykres");
+            stage.show();
+            
+            
+            Scene scene2 = new Scene(gridPane, 400, 400);
+            stage2.setScene(scene2);
+            stage2.setTitle("Dane");
+            stage2.show();
+        	
         }
-        
-        Stage stage = new Stage();
-        Stage stage2 = new Stage();
-        Scene scene = new Scene(scatterChart,1024,768);
-        scene.getStylesheets().add("/view/style.css");
-        scatterChart.getData().addAll(series, series2, series3);
-        
-        stage.setScene(scene);
-        stage.setTitle("Wykres");
-        stage.show();
-        
-        
-        Scene scene2 = new Scene(gridPane, 400, 400);
-        stage2.setScene(scene2);
-        stage2.setTitle("Dane");
-        stage2.show();
+		
 	}
 	
 	@Override
@@ -697,6 +854,45 @@ public class Main extends Application implements Initializable {
 	        y[left] = y[right];
 	        y[right] = temp;
 	    }
+		return y;
+	}
+	
+	private static RealInterval[] interpolacja2(RealInterval[] x, RealInterval[] y) {
+		int st=0, i=-1, n=x.length;
+		
+		do {
+			i++;
+			for(int k=i+1;k<n;k++) {
+				if(x[i].equals(x[k]))st=42;
+			}
+		} while(i==n-1 || st==42);
+		
+		if(st==0) {
+			for(int k=1; k<n; k++) {
+				for(i=0; i<n-k; i++) {
+					y[i]=IAMath.div(IAMath.sub(y[i+1], y[i]), IAMath.sub(x[i+k], x[i]));
+					//y[i]=(y[i+1]-y[i])/(x[i+k]-x[i]);
+					//System.out.println("y[i] = ["+y[i].lo + ", " +y[i].hi+"]");
+				}
+			}
+			//System.out.println();
+			
+			for(i=1;i<n;i++){
+				for(int j=i;j>=1;j--){
+					y[j]=IAMath.sub(y[j], IAMath.mul(y[j-1],x[i]));
+					//y[j]=y[j]-y[j-1]*x[i];
+					//System.out.println("y[j] = ["+y[j].lo + ", " +y[j].hi+"]");
+				}
+			}
+			//System.out.println();
+		}
+		for (int left = 0, right = y.length - 1; left < right; left++, right--) {
+	        // swap the values at the left and right indices
+	        RealInterval temp = y[left];
+	        y[left] = y[right];
+	        y[right] = temp;
+	    }
+		
 		return y;
 	}
 	

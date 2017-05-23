@@ -17,7 +17,8 @@ package ia_math;
  */
 
 public class RealInterval implements Cloneable{
-  double lo,hi;
+  public double lo;
+  public double hi;
 
   public RealInterval(double lo, double hi) throws IAException
   {
