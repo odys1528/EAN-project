@@ -409,7 +409,7 @@ public class Main extends Application implements Initializable {
     		
     		fx = new Label();
     		wx = new Label();
-    		fx.setText("f([x]) = ");
+    		fx.setText("f(x) = ");
     		wx.setText("w([x]) = ");
     		gridPane.add(fx, 0, 5);
     		gridPane.add(wx, 0, 6);
@@ -423,35 +423,36 @@ public class Main extends Application implements Initializable {
     			public void handle(ActionEvent event) {
     				if(!odcieta2.getText().isEmpty() && isNumeric2(odcieta2.getText())) {
     					double x = Double.parseDouble(odcieta2.getText());
-    					double f=0, w=0;
+    					double f=0;
+    					RealInterval w=new RealInterval(0);
     					
     					if(index == 0) {
-    						//f=Math.pow(x, p);
+    						f=Math.pow(x, p);
     			        }
     			        
     			        else if(index == 1) {
-    			        	//f=Math.pow(p, x);
+    			        	f=Math.pow(p, x);
     			        }
     			        
     			        else if(index == 2) {
-    			        	//f=p*Math.sin(x);
+    			        	f=p*Math.sin(x);
     			        }
     			        
     			        else {
     			        	f=0;
     			        	for(int t=0; t<funkcja_uzytkownika.size(); t++) {
-    			        		//f += Math.pow(x, t)*funkcja_uzytkownika.get(t);
+    			        		f += Math.pow(x, t)*funkcja_uzytkownika.get(t);
     			        	}
     			        }
-    			        fx.setText("f([x]) = " + f);
+    			        fx.setText("f(x) = " + f);
     			        
-    					w = 0;
     					for(int t=0; t<y2.length; t++) {
+    						w = IAMath.add(w, IAMath.mul(new RealInterval(Math.pow(x, t)), y2[t]));
     						//w += Math.pow(x, t)*y1[t];
     					}
-    					wx.setText("w([x]) = " + w);
+    					wx.setText("w([x]) = [" + w.lo + ", " + w.hi + "]");
     					
-    					delta.setText("\u2206 = " + (f-w));
+    					delta.setText("\u2206 = " + IAMath.sub(new RealInterval(f), w));
     				}
     			}
     		});
