@@ -32,29 +32,29 @@
     <TextField fx:id="stopien_wielomianu" layoutX="144.0" layoutY="138.0" prefHeight="26.0" prefWidth="148.0" promptText="stopień wielomianu" />
     <TextField fx:id="wspolczynnik" layoutX="144.0" layoutY="178.0" prefWidth="117.0" promptText="współczynnik" />
     <Label fx:id="funkcja" alignment="CENTER" layoutX="153.0" layoutY="304.0" prefHeight="51.0" prefWidth="359.0" text="f(x) =" textAlignment="CENTER" wrapText="true" />
-    <Label layoutX="120.0" layoutY="436.0" text="punkty" />
+    <Label layoutX="120.0" layoutY="436.0" text="węzły" />
     <RadioButton fx:id="z_reki_punkty" layoutX="120.0" layoutY="508.0" mnemonicParsing="false" text="z ręki" />
     <TextField fx:id="ilosc_punktow" layoutX="144.0" layoutY="464.0" prefWidth="200.0" promptText="ilość punktów" />
-    <RadioButton fx:id="rownoodlegle" layoutX="126.0" layoutY="575.0" mnemonicParsing="false" text="równoodległe" />
-    <RadioButton fx:id="czebyszewa" layoutX="126.0" layoutY="653.0" mnemonicParsing="false" text="Czebyszewa" />
-    <TextField fx:id="odleglosc" layoutX="153.0" layoutY="602.0" prefWidth="88.0" promptText="odległość" />
+    <RadioButton fx:id="rownoodlegle" layoutX="120.0" layoutY="575.0" mnemonicParsing="false" text="równoodległe" />
+    <RadioButton fx:id="czebyszewa" layoutX="120.0" layoutY="653.0" mnemonicParsing="false" text="Czebyszewa" />
+    <TextField fx:id="odleglosc" layoutX="144.0" layoutY="602.0" prefWidth="88.0" promptText="odległość" />
     <Label fx:id="punkty" alignment="CENTER" layoutX="171.0" layoutY="693.0" prefHeight="75.0" prefWidth="359.0" text="x = { }" wrapText="true" />
     <Button fx:id="interpoluj" layoutX="261.0" layoutY="878.0" mnemonicParsing="false" prefHeight="75.0" prefWidth="179.0" text="INTERPOLUJ" />
-    <TextField fx:id="odcieta" layoutX="150.0" layoutY="537.0" prefWidth="104.0" promptText="odcięta" />
-    <Button fx:id="dodaj_punkt" layoutX="273.0" layoutY="536.0" mnemonicParsing="false" text="dodaj" />
+    <TextField fx:id="odcieta" layoutX="144.0" layoutY="537.0" prefWidth="104.0" promptText="odcięta" />
+    <Button fx:id="dodaj_punkt" layoutX="263.0" layoutY="536.0" mnemonicParsing="false" text="dodaj" />
     <Button fx:id="dodaj_wspolczynnik" layoutX="277.0" layoutY="178.0" mnemonicParsing="false" text="dodaj" />
     <Button fx:id="zatwierdz" layoutX="310.0" layoutY="138.0" mnemonicParsing="false" text="zatwierdź" />
     <Button fx:id="zatwierdz2" layoutX="388.0" layoutY="256.0" mnemonicParsing="false" text="zatwierdź" />
     <Button fx:id="reset" layoutX="531.0" layoutY="316.0" mnemonicParsing="false" text="reset" />
     <Button fx:id="zatwierdz3" layoutX="361.0" layoutY="463.0" mnemonicParsing="false" text="zatwierdź" />
-    <Button fx:id="zatwierdz4" layoutX="258.0" layoutY="602.0" mnemonicParsing="false" text="zatwierdź" />
+    <Button fx:id="zatwierdz4" layoutX="248.0" layoutY="602.0" mnemonicParsing="false" text="zatwierdź" />
     <Button fx:id="reset2" layoutX="537.0" layoutY="718.0" mnemonicParsing="false" text="reset" />
     <Label layoutX="120.0" layoutY="362.0" text="zakres wyświetlania" />
-    <TextField fx:id="min" layoutX="126.0" layoutY="389.0" prefWidth="48.0" promptText="min" />
-    <TextField fx:id="max" layoutX="190.0" layoutY="389.0" prefWidth="48.0" promptText="max" />
-    <Button fx:id="zatwierdz5" layoutX="254.0" layoutY="389.0" mnemonicParsing="false" text="zatwierdź" />
-    <Button fx:id="reset3" layoutX="361.0" layoutY="389.0" mnemonicParsing="false" text="reset" />
-    <Button fx:id="zatwierdz6" layoutX="249.0" layoutY="650.0" mnemonicParsing="false" text="zatwierdź" />
+    <TextField fx:id="min" layoutX="144.0" layoutY="389.0" prefWidth="48.0" promptText="min" />
+    <TextField fx:id="max" layoutX="208.0" layoutY="389.0" prefWidth="48.0" promptText="max" />
+    <Button fx:id="zatwierdz5" layoutX="272.0" layoutY="389.0" mnemonicParsing="false" text="zatwierdź" />
+    <Button fx:id="reset3" layoutX="379.0" layoutY="389.0" mnemonicParsing="false" text="reset" />
+    <Button fx:id="zatwierdz6" layoutX="241.0" layoutY="650.0" mnemonicParsing="false" text="zatwierdź" />
     <ChoiceBox fx:id="arytmetyka" layoutX="132.0" layoutY="810.0" prefWidth="249.0">
       <items>
         <FXCollections fx:factory="observableArrayList">
