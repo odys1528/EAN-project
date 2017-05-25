@@ -202,7 +202,7 @@ public class Main extends Application implements Initializable {
         if(aryt==0) {
         	double[] x = new double[punkty_uzytkownika.size()];
     		for(int i=0; i<punkty_uzytkownika.size(); i++) {
-    			x[i]=punkty_uzytkownika.get(i);
+    			x[i]=punkty_uzytkownika.get(i);System.out.println(x[i]);
     		}
     		
     		double[] y = new double[punkty_uzytkownika.size()];
@@ -218,7 +218,7 @@ public class Main extends Application implements Initializable {
     			}
     			else {
     				for(int w=0; w<funkcja_uzytkownika.size(); w++) {
-            			y[i] += Math.pow(i, w)*funkcja_uzytkownika.get(w);
+            			y[i] += Math.pow(x[i], w)*funkcja_uzytkownika.get(w);
             		}
     			}
     		}
@@ -234,7 +234,7 @@ public class Main extends Application implements Initializable {
     	    gridPane.setAlignment(Pos.CENTER); 
     		
     	    funkcja_bazowa = new Label();
-    	    funkcja_bazowa.setText("f(x) = " + series.getName());
+    	    funkcja_bazowa.setText(series.getName());
     	    gridPane.add(funkcja_bazowa, 0, 0);
     	    
     		funkcja_interpolowana = new Label();
@@ -365,7 +365,7 @@ public class Main extends Application implements Initializable {
         		}
         		else {
         			for(int w=0; w<funkcja_uzytkownika.size(); w++) {
-        				y[i]=IAMath.add(y[i], IAMath.mul(IAMath.evenPower(new RealInterval(i), w), new RealInterval(funkcja_uzytkownika.get(w))));
+        				y[i]=IAMath.add(y[i], IAMath.mul(IAMath.evenPower(x[i], w), new RealInterval(funkcja_uzytkownika.get(w))));
         			}
         		}
         	}
@@ -381,7 +381,7 @@ public class Main extends Application implements Initializable {
     	    gridPane.setAlignment(Pos.CENTER); 
     		
     	    funkcja_bazowa = new Label();
-    	    funkcja_bazowa.setText("f(x) = " + series.getName());
+    	    funkcja_bazowa.setText(series.getName());
     	    gridPane.add(funkcja_bazowa, 0, 0);
     	    
     		funkcja_interpolowana = new Label();
