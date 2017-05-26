@@ -191,7 +191,7 @@ public class Main extends Application implements Initializable {
         
         else {
         	series.setName(funkcja.getText());
-        	for(double i=mn; i<=mx; i+=0.01) {
+        	for(double i=mn; i<=mx; i+=0.001) {
         		double fun = 0;
         		for(int w=0; w<funkcja_uzytkownika.size(); w++) {
         			fun += Math.pow(i, w)*funkcja_uzytkownika.get(w);
@@ -325,7 +325,7 @@ public class Main extends Application implements Initializable {
     		
     		
     		
-    		for(double i=mn; i<=mx; i+=0.01) {
+    		for(double i=mn; i<=mx; i+=0.001) {
     			double fun = 0;
     			for(int w=0; w<y.length; w++) {
     				fun += Math.pow(i, w)*y[w];
