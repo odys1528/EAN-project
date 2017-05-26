@@ -1,5 +1,7 @@
 package ia_math;
 
+import ia_math.RealInterval;
+
 /**
  * IAMath.java 
  *   -- classes implementing interval arithmetic versions
@@ -894,7 +896,19 @@ public class IAMath
     }
 
     return true;
- }    
+ }
+  public static RealInterval abs(RealInterval ri) {
+		return new RealInterval(minInterval(ri),maxInterval(ri));
+	}
+	
+	public static double minInterval(RealInterval ri) {
+		if(ri.lo<=0 && ri.hi>=0)return 0;
+		else return Math.min(Math.abs(ri.lo), Math.abs(ri.hi));
+	}
+	
+	public static double maxInterval(RealInterval ri) {
+		return Math.max(Math.abs(ri.lo), Math.abs(ri.hi));
+	}
 
 
 

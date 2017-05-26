@@ -157,7 +157,7 @@ public class Main extends Application implements Initializable {
 		//PIERWSZY WYKRES----------------------------------------------------------------------
 		chartX = new NumberAxis();
         chartY = new NumberAxis();
-        String[] wykres = {"x^", "^x", "*sin(x)"};
+        String[] wykres = {"x^", "^x", "*sin(x)", "*|x|"};
         final ScatterChart<Number,Number> scatterChart = new ScatterChart<Number,Number>(chartX,chartY);   
         scatterChart.setAnimated(false);
         XYChart.Series series = new XYChart.Series();
@@ -180,6 +180,12 @@ public class Main extends Application implements Initializable {
         	series.setName(p+wykres[index]);
         	for(double i=mn; i<=mx; i+=0.01) {
         		series.getData().add(new XYChart.Data(i, p*Math.sin(i)));
+        	}
+        }
+        else if(index == 3) {
+        	series.setName(p+wykres[index]);
+        	for(double i=mn; i<=mx; i+=0.01) {
+        		series.getData().add(new XYChart.Data(i, p*Math.abs(i)));
         	}
         }
         
@@ -215,6 +221,9 @@ public class Main extends Application implements Initializable {
     			}
     			else if(index == 2) {
     				y[i] = Math.sin(punkty_uzytkownika.get(i))*p;
+    			}
+    			else if(index == 3) {
+    				y[i] = Math.abs(punkty_uzytkownika.get(i))*p;
     			}
     			else {
     				for(int w=0; w<funkcja_uzytkownika.size(); w++) {
@@ -286,9 +295,13 @@ public class Main extends Application implements Initializable {
     			        else if(index == 1) {
     			        	f=Math.pow(p, x);
     			        }
-    			        
+
     			        else if(index == 2) {
     			        	f=p*Math.sin(x);
+    			        }
+    					
+    			        else if(index == 3) {
+    			        	f=p*Math.abs(x);
     			        }
     			        
     			        else {
@@ -346,6 +359,8 @@ public class Main extends Application implements Initializable {
             stage2.setScene(scene2);
             stage2.setTitle("Dane");
             stage2.show();
+            
+            
         } else if(aryt==1) {
         	RealInterval[] x = new RealInterval[punkty_uzytkownika.size()];
         	for(int i=0; i<punkty_uzytkownika.size(); i++) {
@@ -362,6 +377,9 @@ public class Main extends Application implements Initializable {
         		}
         		else if(index==2) {
         			y[i] = IAMath.sin(x[i]);
+        		}
+        		else if(index==3) {
+        			y[i] = IAMath.abs(x[i]);
         		}
         		else {
         			for(int w=0; w<funkcja_uzytkownika.size(); w++) {
@@ -436,6 +454,10 @@ public class Main extends Application implements Initializable {
     			        
     			        else if(index == 2) {
     			        	f=p*Math.sin(x);
+    			        }
+    					
+    			        else if(index == 3) {
+    			        	f=p*Math.abs(x);
     			        }
     			        
     			        else {
@@ -558,7 +580,7 @@ public class Main extends Application implements Initializable {
 			}
 		});
 		
-		ktora_domyslna.setItems(FXCollections.observableArrayList("x^p", "p^x", "p*sin(x)"));
+		ktora_domyslna.setItems(FXCollections.observableArrayList("x^p", "p^x", "p*sin(x)", "p*|x|"));
 		
 		ktora_domyslna.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue ov, Number value, Number new_value) {
@@ -581,6 +603,10 @@ public class Main extends Application implements Initializable {
 					
 					if(index == 2) {
 						funkcja.setText(funkcja.getText() + " " + parametr.getText() + "*sin(x)");
+					}
+					
+					if(index == 3) {
+						funkcja.setText(funkcja.getText() + " " + parametr.getText() + "*|x|");
 					}
 					
 					p = Double.parseDouble(parametr.getText());
