@@ -647,9 +647,12 @@ public class Main extends Application implements Initializable {
 			public void handle(ActionEvent event) {
 				if(!ilosc_punktow.getText().isEmpty() && isNumeric(ilosc_punktow.getText())) {
 					pkt = Integer.parseInt(ilosc_punktow.getText());
-					pkt2 = pkt;
-					ilosc_punktow.setDisable(true);
-					zatwierdz3.setDisable(true);
+					if(pkt>=2) {
+						pkt2 = pkt;
+						ilosc_punktow.setDisable(true);
+						zatwierdz3.setDisable(true);
+					}
+					
 				}
 			}
 		});
