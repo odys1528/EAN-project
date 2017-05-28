@@ -32,6 +32,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import ia_math.IAMath;
 import ia_math.RealInterval;
@@ -243,7 +244,7 @@ public class Main extends Application implements Initializable {
     	    gridPane.setAlignment(Pos.CENTER); 
     		
     	    funkcja_bazowa = new Label();
-    	    funkcja_bazowa.setText(series.getName());
+    	    funkcja_bazowa.setText("f(x) = "+series.getName());
     	    gridPane.add(funkcja_bazowa, 0, 0);
     	    
     		funkcja_interpolowana = new Label();
@@ -280,6 +281,25 @@ public class Main extends Application implements Initializable {
     		delta = new Label();
     		delta.setText("\u2206 = ");
     		gridPane.add(delta, 0, 7);
+    		
+    		funkcja_bazowa.setWrapText(true);
+    		funkcja_interpolowana.setWrapText(true);
+    		fx.setWrapText(true);
+    		wx.setWrapText(true);
+    		delta.setWrapText(true);
+    		
+    		funkcja_bazowa.setMaxWidth(480);
+    		funkcja_interpolowana.setMaxWidth(480);
+    		fx.setMaxWidth(480);
+    		wx.setMaxWidth(480);
+    		delta.setMaxWidth(480);
+    		
+    		funkcja_bazowa.setTextAlignment(TextAlignment.JUSTIFY);
+    		funkcja_interpolowana.setTextAlignment(TextAlignment.JUSTIFY);
+    		fx.setTextAlignment(TextAlignment.JUSTIFY);
+    		wx.setTextAlignment(TextAlignment.JUSTIFY);
+    		delta.setTextAlignment(TextAlignment.JUSTIFY);
+    		
     		
     		oblicz.setOnAction(new EventHandler<ActionEvent>() {
     			@Override
@@ -355,7 +375,7 @@ public class Main extends Application implements Initializable {
             stage.show();
             
             
-            Scene scene2 = new Scene(gridPane, 400, 400);
+            Scene scene2 = new Scene(gridPane, 500, 500);
             stage2.setScene(scene2);
             stage2.setTitle("Dane");
             stage2.show();
@@ -399,13 +419,13 @@ public class Main extends Application implements Initializable {
     	    gridPane.setAlignment(Pos.CENTER); 
     		
     	    funkcja_bazowa = new Label();
-    	    funkcja_bazowa.setText(series.getName());
+    	    funkcja_bazowa.setText("f(x) = "+series.getName());
     	    gridPane.add(funkcja_bazowa, 0, 0);
     	    
     		funkcja_interpolowana = new Label();
     		gridPane.add(funkcja_interpolowana, 0, 1);
     		
-    		funkcja_interpolowana.setText("w(x) = ");
+    		funkcja_interpolowana.setText("w([x]) = ");
     		for(int i = x.length-1; i>=0; i--){
     			funkcja_interpolowana.setText(funkcja_interpolowana.getText() + "["+y[i].lo+", "+y[i].hi + "]x^" + i + " + ");
     		}
@@ -435,6 +455,24 @@ public class Main extends Application implements Initializable {
     		delta = new Label();
     		delta.setText("\u2206 = ");
     		gridPane.add(delta, 0, 7);
+    		
+    		funkcja_bazowa.setWrapText(true);
+    		funkcja_interpolowana.setWrapText(true);
+    		fx.setWrapText(true);
+    		wx.setWrapText(true);
+    		delta.setWrapText(true);
+    		
+    		funkcja_bazowa.setMaxWidth(480);
+    		funkcja_interpolowana.setMaxWidth(480);
+    		fx.setMaxWidth(480);
+    		wx.setMaxWidth(480);
+    		delta.setMaxWidth(480);
+    		
+    		funkcja_bazowa.setTextAlignment(TextAlignment.JUSTIFY);
+    		funkcja_interpolowana.setTextAlignment(TextAlignment.JUSTIFY);
+    		fx.setTextAlignment(TextAlignment.JUSTIFY);
+    		wx.setTextAlignment(TextAlignment.JUSTIFY);
+    		delta.setTextAlignment(TextAlignment.JUSTIFY);
     		
     		oblicz.setOnAction(new EventHandler<ActionEvent>() {
     			@Override
@@ -515,7 +553,7 @@ public class Main extends Application implements Initializable {
             stage.show();
             
             
-            Scene scene2 = new Scene(gridPane, 400, 400);
+            Scene scene2 = new Scene(gridPane, 500, 500);
             stage2.setScene(scene2);
             stage2.setTitle("Dane");
             stage2.show();
