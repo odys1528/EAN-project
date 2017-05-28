@@ -164,27 +164,27 @@ public class Main extends Application implements Initializable {
         XYChart.Series series = new XYChart.Series();
         
         if(index == 0) {
-        	series.setName(wykres[index]+p);
+        	series.setName("f(x) = "+wykres[index]+p);
         	for(double i=mn; i<=mx; i+=0.01) {
         		series.getData().add(new XYChart.Data(i, Math.pow(i, p)));
         	}
         }
         
         else if(index == 1) {
-        	series.setName(p+wykres[index]);
+        	series.setName("f(x) = "+p+wykres[index]);
         	for(double i=mn; i<=mx; i+=0.01) {
         		series.getData().add(new XYChart.Data(i, Math.pow(p, i)));
         	}
         }
         
         else if(index == 2) {
-        	series.setName(p+wykres[index]);
+        	series.setName("f(x) = "+p+wykres[index]);
         	for(double i=mn; i<=mx; i+=0.01) {
         		series.getData().add(new XYChart.Data(i, p*Math.sin(i)));
         	}
         }
         else if(index == 3) {
-        	series.setName(p+wykres[index]);
+        	series.setName("f(x) = "+p+wykres[index]);
         	for(double i=mn; i<=mx; i+=0.01) {
         		series.getData().add(new XYChart.Data(i, p*Math.abs(i)));
         	}
@@ -244,7 +244,7 @@ public class Main extends Application implements Initializable {
     	    gridPane.setAlignment(Pos.CENTER); 
     		
     	    funkcja_bazowa = new Label();
-    	    funkcja_bazowa.setText("f(x) = "+series.getName());
+    	    funkcja_bazowa.setText(series.getName());
     	    gridPane.add(funkcja_bazowa, 0, 0);
     	    
     		funkcja_interpolowana = new Label();
@@ -603,15 +603,16 @@ public class Main extends Application implements Initializable {
 		dodaj_wspolczynnik.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				if(!wspolczynnik.getText().isEmpty() && st > 0 && isNumeric2(wspolczynnik.getText())) {
-					st--;
+				if(!wspolczynnik.getText().isEmpty() && st >= 0 && isNumeric2(wspolczynnik.getText())) {
+					
 					funkcja_uzytkownika.add(Double.parseDouble(wspolczynnik.getText()));
 					funkcja.setText(funkcja.getText() + " " + wspolczynnik.getText() + "x^" + st);
 					if(st > 0)funkcja.setText(funkcja.getText() + " +");
-					wspolczynnik.clear();					
+					wspolczynnik.clear();
+					st--;			
 				}
 				
-				if(st == 0) {
+				if(st < 0) {
 					wylaczFunkcje();
 					Collections.reverse(funkcja_uzytkownika);
 				}
