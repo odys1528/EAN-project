@@ -419,7 +419,7 @@ public class Main extends Application implements Initializable {
     	    gridPane.setAlignment(Pos.CENTER); 
     		
     	    funkcja_bazowa = new Label();
-    	    funkcja_bazowa.setText("f(x) = "+series.getName());
+    	    funkcja_bazowa.setText(series.getName());
     	    gridPane.add(funkcja_bazowa, 0, 0);
     	    
     		funkcja_interpolowana = new Label();
