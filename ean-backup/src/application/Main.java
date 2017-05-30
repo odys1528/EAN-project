@@ -512,7 +512,7 @@ public class Main extends Application implements Initializable {
     					}
     					wx.setText("w([x]) = [" + w.lo + ", " + w.hi + "]");
     					
-    					delta.setText("\u2206 = " + IAMath.sub(new RealInterval(f), w));
+    					delta.setText("\u2206 = [" + IAMath.sub(new RealInterval(f), w).lo + ", " + IAMath.sub(new RealInterval(f), w).hi + "]");
     				}
     			}
     		});
