@@ -23,6 +23,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
+import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -396,7 +397,7 @@ public class Main extends Application implements Initializable {
         			y[i] = IAMath.power(new RealInterval(p), x[i]);
         		}
         		else if(index==2) {
-        			y[i] = IAMath.sin(x[i]);
+        			y[i] = IAMath.mul(IAMath.sin(x[i]),new RealInterval(p));
         		}
         		else if(index==3) {
         			y[i] = IAMath.abs(x[i]);
@@ -513,6 +514,8 @@ public class Main extends Application implements Initializable {
     					wx.setText("w([x]) = [" + w.lo + ", " + w.hi + "]");
     					
     					delta.setText("\u2206 = [" + IAMath.sub(new RealInterval(f), w).lo + ", " + IAMath.sub(new RealInterval(f), w).hi + "]");
+    					
+    					//delta.setText(""+Math.abs(w.hi-w.lo));
     				}
     			}
     		});
